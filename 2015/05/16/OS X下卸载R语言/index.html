@@ -1,0 +1,79 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>OS X下卸载R语言 | 子川的博客</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/8.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">OS X下卸载R语言</h1><a id="logo" href="/.">子川的博客</a><p class="description">──莫愁前路无知己，天下谁人不识君！</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">OS X下卸载R语言</h1><div class="post-meta">May 16, 2015<span> | </span><span class="category"><a href="/categories/技术/">技术</a></span></div><a class="disqus-comment-count" data-disqus-identifier="2015/05/16/OS X下卸载R语言/" href="/2015/05/16/OS X下卸载R语言/#disqus_thread"></a><div class="post-content"><p>我最讨厌那些装上后不能完全卸载的软件，比如R。如果你也需要完全卸载R，下面的方法也许会帮到你。  </p>
+<p>OS X 下R语言安装后会有三部分内容（默认）:</p>
+<ul>
+<li>R framework（/Library/Frameworks/R.framework）</li>
+<li>R.app（/Applications/R.app，可选）</li>
+<li>Tcl/Tk（/usr/bin，可选）</li>
+</ul>
+<p>总的来说，前两个组件是比较容易删除的（需要权限的话，加sudo）:<br><code>rm -rf /Library/Frameworks/R.framework /Applications/R.app 
+   /usr/bin/R /usr/bin/Rscript</code><br>最恶心的就是第三个组件，官网<br><a href="http://cran.r-project.org/doc/manuals/R-admin.html#Uninstalling-under-OS-X" target="_blank" rel="noopener">Uninstalling under OS X</a>竟然说卸载它不容易，然后只给出了查看它安装了哪些文件，然后就没然后了。</p>
+<p>我的方法，也只是在它的基础上实现的，至于会不会产生不良后果现在还不知道，如果不在意这些细节的话，建议不要删除算了。</p>
+<ol>
+<li>查看安装了哪些文件并将结果重定向到文件。<br><code>pkgutil --files org.r-project.x86_64.tcltk.x11 &gt; tcltk</code>  </li>
+<li><p>查看一下文件内容，最好用文本编辑器打开，因为我们还要修改下这个结果。 </p>
+<pre><code>usr
+usr/local
+usr/local/bin
+usr/local/bin/tclsh8.6
+usr/local/bin/wish8.6
+usr/local/include
+usr/local/include/fakemysql.h
+usr/local/include/fakepq.h
+usr/local/include/fakesql.h
+usr/local/include/itcl.h  
+</code></pre><p>这是文件的前10行。有两点需要注意：  </p>
+<ul>
+<li>都是相对路径</li>
+<li>有目录、有文件<br>首先我们要剔除掉里面的一些目录（放心，没几个），这里为了保险起见我手工删除的，比如<code>usr</code>、<code>usr/local</code>、<code>usr/local/bin</code>、<code>usr/local/include</code>这些都是要排除掉的目录，因为Tcl/Tk影响的都是它们的内部的子目录或文件。  </li>
+</ul>
+</li>
+<li>最重要的是第2步，一定要细心排除掉那些我们不想删掉的目录。这一步是把相对路径变成绝对路径，采用Vim或Sublime等，在每一行的行首加上<code>/</code>。</li>
+<li><code>cat tcltk | sudo xargs rm -rf</code>。</li>
+</ol>
+<p><strong><em>忠告：<code>rm -rf</code>是一个非常危险的命令。</em></strong></p>
+</div><div class="tags"><a href="/tags/Mac/">Mac</a></div><div id="disqus_thread"><div class="btn_click_load"><button class="disqus_click_btn">阅读评论（请确保 Disqus 可以正常加载）</button></div><script type="text/javascript">var disqus_config = function () {
+    this.page.url = 'http://jackliu91.github.io/2015/05/16/OS X下卸载R语言/';
+    this.page.identifier = '2015/05/16/OS X下卸载R语言/';
+    this.page.title = 'OS X下卸载R语言';
+  };</script><script type="text/javascript" id="disqus-lazy-load-script">$.ajax({
+url: 'https://disqus.com/next/config.json',
+timeout: 2500,
+type: 'GET',
+success: function(){
+  var d = document;
+  var s = d.createElement('script');
+  s.src = '//zichuan.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', + new Date());
+  (d.head || d.body).appendChild(s);
+  $('.disqus_click_btn').css('display', 'none');
+},
+error: function() {
+  $('.disqus_click_btn').css('display', 'block');
+}
+});</script><script type="text/javascript" id="disqus-click-load">$('.btn_click_load').click(() => {  //click to load comments
+    (() => { // DON'T EDIT BELOW THIS LINE
+        var d = document;
+        var s = d.createElement('script');
+        s.src = '//zichuan.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', + new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+    $('.disqus_click_btn').css('display','none');
+});</script><script type="text/javascript" id="disqus-count-script">$(function() {
+     var xhr = new XMLHttpRequest();
+     xhr.open('GET', '//disqus.com/next/config.json', true);
+     xhr.timeout = 2500;
+     xhr.onreadystatechange = function () {
+       if (xhr.readyState === 4 && xhr.status === 200) {
+         $('.post-meta .post-comments-count').show();
+         var s = document.createElement('script');
+         s.id = 'dsq-count-scr';
+         s.src = 'https://zichuan.disqus.com/count.js';
+         s.async = true;
+         (document.head || document.body).appendChild(s);
+       }
+     };
+     xhr.ontimeout = function () { xhr.abort(); };
+     xhr.send(null);
+   });
+</script></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://jackliu91.github.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/Mac/" style="font-size: 15px;">Mac</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2015/05/16/OS X下卸载R语言/">OS X下卸载R语言</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-comment-o"> 最近评论</i></div><script type="text/javascript" src="//zichuan.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=1&amp;avatar_size=32&amp;excerpt_length=20&amp;hide_mods=1"></script></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2018 <a href="/." rel="nofollow">子川的博客.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>
