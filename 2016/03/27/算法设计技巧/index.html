@@ -1,0 +1,101 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>算法设计技巧 | 子川的博客</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/8.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">算法设计技巧</h1><a id="logo" href="/.">子川的博客</a><p class="description">──莫愁前路无知己，天下谁人不识君！</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">算法设计技巧</h1><div class="post-meta">Mar 27, 2016<span> | </span><span class="category"><a href="/categories/学习/">学习</a></span></div><a class="disqus-comment-count" data-disqus-identifier="2016/03/27/算法设计技巧/" href="/2016/03/27/算法设计技巧/#disqus_thread"></a><div class="post-content"><h1 id="贪婪算法（greedy-algorithm）"><a href="#贪婪算法（greedy-algorithm）" class="headerlink" title="贪婪算法（greedy algorithm）"></a>贪婪算法（greedy algorithm）</h1><p>贪婪算法分阶段地工作。在每个阶段，可以认为所作决定是好的，而不考虑将来的后果。一般地说，这意味着选择的是某个局部的最优。这种”眼下能够拿到的就拿“的策略即是这类算法名称的来源。当算法终止时，我们希望局部最优就是全局最优。如果是这样的话，那么算法就是正确的；否则，算法得到的是一个次最优解（suboptimal solution）。</p>
+<ul>
+<li>Dijkstra算法、Prim算法、Kruskal算法</li>
+<li>找零钱问题</li>
+</ul>
+<h2 id="一个简单的调度问题"><a href="#一个简单的调度问题" class="headerlink" title="一个简单的调度问题"></a>一个简单的调度问题</h2><p><strong>非预占调度</strong>（nonpreemptive scheduling）： 一旦开始一个作业，就必须把该作业运行到完成。</p>
+<h2 id="Huffman编码"><a href="#Huffman编码" class="headerlink" title="Huffman编码"></a>Huffman编码</h2><p>算法对一个由树组成的森林进行。一棵树的权等于它的树叶的频率的和。任意选取最小权的两棵树$T_1$和$T_2$为子树的新树，将这样的过程进行C-1次。在算法的开始，存在C棵单节点树——每个字符一棵。在算法结束时得到一棵树，这棵树就是最优哈夫曼编码树。</p>
+<p>树必然是满的；两个频率最小的字符$\alpha$和$\beta$必是两个最深的节点。<br>该算法是贪婪算法的原因在于，在每一个阶段我们都进行一次合并而没有进行全局的考虑。我们只是选择两棵最小的树。</p>
+<ul>
+<li>如果我们依权排序将这些树保存在一个优先队列中，那么运行时间为$O(C log C)$；</li>
+<li>如果使用一个链表简单实现该队列将给出一个$O(C^2)$算法。</li>
+</ul>
+<h2 id="近似装箱问题"><a href="#近似装箱问题" class="headerlink" title="近似装箱问题"></a>近似装箱问题</h2><p>联机装箱问题不存在最优算法。因为联机算法不知道输入何时会结束，因此它提供的任何性能保证必须在整个算法的每一时刻成立。</p>
+<p>存在使得任意联机装箱算法至少使用$\frac{4}{3}$最优箱子数的输入。</p>
+<h3 id="联机算法"><a href="#联机算法" class="headerlink" title="联机算法"></a>联机算法</h3><h4 id="下项适合算法"><a href="#下项适合算法" class="headerlink" title="下项适合算法"></a>下项适合算法</h4><p>最简单的算法就属<strong>下项适合</strong>（next fit）算法了。当处理任何一项物品时，我们检查看它是否还能装进刚刚培育进物品的同一个箱子中去。如果能够装进去，那么就把它放入该箱中；否则，就开辟一个新的箱子。</p>
+<p>实现出奇地简单，而且还以线性时间运行。</p>
+<ul>
+<li>令M是一列物品I装箱装箱所需的最优装箱数，则下项适合算法所用箱数绝不超过2M个箱子。</li>
+</ul>
+<h4 id="首次适合算法"><a href="#首次适合算法" class="headerlink" title="首次适合算法"></a>首次适合算法</h4><p><strong>首次适合算法</strong>（first fit）的策略是依序扫描这些箱子但把新的一项物品放入足能盛下它的第一个箱子中。因此，只有当先前放置物品的结果已经没有再容下当前物品余地的时候，我们才开辟一个新箱子。</p>
+<ul>
+<li>令M是一列物品I装箱所需要的最优箱子数，则首次适合算法使用的箱子数绝不多于$\lceil\frac{17}{10}M\rceil$。存在使得首次适合算法使用$\frac{17}{10}(M -1)$个箱子顺序。</li>
+</ul>
+<h4 id="最佳适合算法"><a href="#最佳适合算法" class="headerlink" title="最佳适合算法"></a>最佳适合算法</h4><p><strong>最佳适合算法</strong>（best fit）不是把一项新物品放入所发现的第一个能够容纳它的箱子，而是放到所有箱子中能够容纳它的最满箱子中。</p>
+<ul>
+<li>最佳适合算法比起最优算法，绝不会超过1.7倍左右，而且存在一些输入，对于这些输入该算法（几乎）达到这个界限。不过，最佳适合算法编程还是简单的，特别是当需要$O(N log N)$算法的时候，而且该算法对随机的输入确实表现得更好。</li>
+</ul>
+<h3 id="脱机算法"><a href="#脱机算法" class="headerlink" title="脱机算法"></a>脱机算法</h3><p>所有联机算法的主要问题在于将大项物品装箱困难，特别是当它们在输入的晚期出现的时候。围绕这个问题的自然方法是将各项物品排序，把最大的物品放在最先。此时我们可以应用首次适合算法或最佳适合算法，分别得到<strong>首次适合递减算法</strong>（first fit decreasing）和<strong>最佳适合递减算法</strong>（best fit decreasing）。</p>
+<h1 id="分治算法（divide-and-conquer-algorithm）"><a href="#分治算法（divide-and-conquer-algorithm）" class="headerlink" title="分治算法（divide and conquer algorithm）"></a>分治算法（divide and conquer algorithm）</h1><ul>
+<li>最大子序列和 （$O(N log N)$）</li>
+<li>树遍历</li>
+<li>归并排序、快速排序</li>
+</ul>
+<h2 id="选择问题"><a href="#选择问题" class="headerlink" title="选择问题"></a>选择问题</h2><p><strong>选择问题</strong>（selection problem）要求我们找出含N个元素的表S中的第k个最小的元素。</p>
+<ul>
+<li>使用“五分化中项的中项”的快速选择算法的运行时间为O(N)。</li>
+</ul>
+<h1 id="动态规划（deynamic-programming）"><a href="#动态规划（deynamic-programming）" class="headerlink" title="动态规划（deynamic programming）"></a>动态规划（deynamic programming）</h1><ul>
+<li>用一个表代替递归</li>
+<li>矩阵乘法的顺序安排</li>
+<li>最优二叉查找树</li>
+<li>所有点对最短路径</li>
+</ul>
+<h1 id="随机化算法（randomized-algorithm）"><a href="#随机化算法（randomized-algorithm）" class="headerlink" title="随机化算法（randomized algorithm）"></a>随机化算法（randomized algorithm）</h1><p>一个随机化算法的最坏情形运行时间几乎总是和非随机化算法的最坏情形运行时间相同。重要的区别在于，好的随机化算法没有不好的输入，而只有坏的随机数。</p>
+<h2 id="跳跃表"><a href="#跳跃表" class="headerlink" title="跳跃表"></a>跳跃表</h2><ul>
+<li>以$O(log N)$期望时间支持查找和插入。</li>
+</ul>
+<h2 id="素性测试"><a href="#素性测试" class="headerlink" title="素性测试"></a>素性测试</h2><p>如果这个算法宣称一个数不是素数，那么我们可以肯定这个数不是素数；如果该算法宣称一个数是素数，那么，这个数将以高的概率而不是100%肯定是素数。错误的概率不依赖于被测试的特定的数，而是依赖于由算法作出的随机选择。因此，这个算法偶尔会出错，不过，我们可以让出错的比率任意小。</p>
+<blockquote>
+<p>费马小定理：如果P是素数，且0&lt; A &lt; P，那么$A^{P-1}\equiv1(mod P)$。</p>
+</blockquote>
+<h1 id="回溯算法（backtracking-algorithm）"><a href="#回溯算法（backtracking-algorithm）" class="headerlink" title="回溯算法（backtracking algorithm）"></a>回溯算法（backtracking algorithm）</h1><ul>
+<li>收费公路重建问题</li>
+<li>博弈</li>
+</ul>
+</div><div class="tags"><a href="/tags/Algorithm/">Algorithm</a></div><div class="post-nav"><a class="next" href="/2015/05/16/OS X下卸载R语言/">OS X下卸载R语言</a></div><div id="disqus_thread"><div class="btn_click_load"><button class="disqus_click_btn">阅读评论（请确保 Disqus 可以正常加载）</button></div><script type="text/javascript">var disqus_config = function () {
+    this.page.url = 'http://jackliu91.github.io/2016/03/27/算法设计技巧/';
+    this.page.identifier = '2016/03/27/算法设计技巧/';
+    this.page.title = '算法设计技巧';
+  };</script><script type="text/javascript" id="disqus-lazy-load-script">$.ajax({
+url: 'https://disqus.com/next/config.json',
+timeout: 2500,
+type: 'GET',
+success: function(){
+  var d = document;
+  var s = d.createElement('script');
+  s.src = '//zichuan.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', + new Date());
+  (d.head || d.body).appendChild(s);
+  $('.disqus_click_btn').css('display', 'none');
+},
+error: function() {
+  $('.disqus_click_btn').css('display', 'block');
+}
+});</script><script type="text/javascript" id="disqus-click-load">$('.btn_click_load').click(() => {  //click to load comments
+    (() => { // DON'T EDIT BELOW THIS LINE
+        var d = document;
+        var s = d.createElement('script');
+        s.src = '//zichuan.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', + new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+    $('.disqus_click_btn').css('display','none');
+});</script><script type="text/javascript" id="disqus-count-script">$(function() {
+     var xhr = new XMLHttpRequest();
+     xhr.open('GET', '//disqus.com/next/config.json', true);
+     xhr.timeout = 2500;
+     xhr.onreadystatechange = function () {
+       if (xhr.readyState === 4 && xhr.status === 200) {
+         $('.post-meta .post-comments-count').show();
+         var s = document.createElement('script');
+         s.id = 'dsq-count-scr';
+         s.src = 'https://zichuan.disqus.com/count.js';
+         s.async = true;
+         (document.head || document.body).appendChild(s);
+       }
+     };
+     xhr.ontimeout = function () { xhr.abort(); };
+     xhr.send(null);
+   });
+</script></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://jackliu91.github.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/学习/">学习</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/Mac/" style="font-size: 15px;">Mac</a> <a href="/tags/Programing-Language/" style="font-size: 15px;">Programing Language</a> <a href="/tags/Algorithm/" style="font-size: 15px;">Algorithm</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/03/27/算法设计技巧/">算法设计技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/05/16/OS X下卸载R语言/">OS X下卸载R语言</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/01/12/VMware Fusion Config Static IP/">VMware Fusion Config Static IP</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/11/24/浅谈Java和CSharp泛型及C++模板/">浅谈Java和C#泛型及C++模板</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-comment-o"> 最近评论</i></div><script type="text/javascript" src="//zichuan.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=1&amp;avatar_size=32&amp;excerpt_length=20&amp;hide_mods=1"></script></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2018 <a href="/." rel="nofollow">子川的博客.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>
