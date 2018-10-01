@@ -1,0 +1,60 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>浅谈Java和C#泛型及C++模板 | 子川的博客</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/8.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">浅谈Java和C#泛型及C++模板</h1><a id="logo" href="/.">子川的博客</a><p class="description">──莫愁前路无知己，天下谁人不识君！</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">浅谈Java和C#泛型及C++模板</h1><div class="post-meta">Nov 24, 2014</div><a class="disqus-comment-count" data-disqus-identifier="2014/11/24/浅谈Java和CSharp泛型及C++模板/" href="/2014/11/24/浅谈Java和CSharp泛型及C++模板/#disqus_thread"></a><div class="post-content"><p>最近偶然接触到了<strong>类型擦除</strong>（Type Erasure）这个概念。通过查了一些资料才知道Java和C#的泛型是有一些区别的，当然与C++的模板也不一样。因此做了如下整理:</p>
+<p>泛型的本质就是让你的类型能够拥有类型参数。它们也被称为<strong>参数化类型</strong>（Parameterized Types）或者<strong>参数的多态</strong>（Parametric Polymorphism）。</p>
+<h3 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h3><p>Java的泛型采用的是类型擦除法，类型擦除是指在运行时去除所有泛型的类型信息（看不懂的看下面的例子）。JVM本身并没有“泛型”的概念，Java语言的泛型只是编译器层面的。而在.NET中，“泛型”是CLR层面上的。在运行时，CLR会为不同的泛型类型生成不同的具体类型代码。因此也有人说Java的泛型是伪泛型，C#的泛型实现地更加彻底。</p>
+<h3 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h3><p>Java的做法最大优势在于其兼容性，使用了泛型的代码可以运行在泛型出现之前的JVM上。而.NET中的泛型需要CLR的支持，因此.NET 2.0的程序集无法在CLR 1.0上运行。但C#的这种实现方式，较之Java减少了装箱和拆箱的开销，在性能上有很大的优势。</p>
+<p>下面通过一个简单的例子来阐述之间的区别。</p>
+<ul>
+<li><p>在C#中，<code>classList&lt;T&gt; {...}</code>，这里T是类型参数。我们可以这样写<code>List&lt;Person&gt;  foo=new List&lt;Person&gt;();</code>新类型是通过<code>List&lt;T&gt;</code>构建的，实际上就像是你的类型参数替换掉了原本的类型参数。编译后相当生成了一个ListOfPerson类，这个类跟其它类没什么区别。这样做的好处是非常迅速，不需要类型转换，在代码中通过反射可以知道这是一个包含Person的List。类型信息没有丢失。</p>
+</li>
+<li><p>在Java中，我们可以这样写<code>ArrayList&lt;Person&gt;  foo =new  ArrayList&lt;Person&gt;();</code>表面上看跟C#是一样的，同样地编译器会阻止你放入不是Person的类型到这个List里。不同点是Java不会创建一个独一的ListOfPerson类。擦除掉了Person的类型信息，相当于只是一个<code>ArrayList&lt;Object&gt;</code>。</p>
+</li>
+<li><p>在C++中，我们可以这样写<code>std::list&lt;Person&gt;*  foo =new std::list&lt;Person&gt;();</code>它跟C#的方式很像（应该说C#的方式跟C++很像）。它同样保存类型信息，而不是像Java那样丢掉。但是C#和Java的输出都是面向虚拟机的，C++是产生原始的x86二进制代码。所有的东西都不是对象，也没有装箱跟拆箱，C++编译器对使用模版来做什么没有限制。可以说C++的模版是更强大。</p>
+</li>
+</ul>
+<p>PS：关于C++的模版这里还有好多细节性的问题没提，因为只想主要比较一下C#和Java的泛型机制是不是类型擦除，所以C++的模版问题就此一笔代过了。上面谈到的如果有什么问题欢迎指正。</p>
+</div><div class="tags"><a href="/tags/Programing-Language/">Programing Language</a></div><div class="post-nav"><a class="pre" href="/2015/05/16/OS X下卸载R语言/">OS X下卸载R语言</a></div><div id="disqus_thread"><div class="btn_click_load"><button class="disqus_click_btn">阅读评论（请确保 Disqus 可以正常加载）</button></div><script type="text/javascript">var disqus_config = function () {
+    this.page.url = 'http://jackliu91.github.io/2014/11/24/浅谈Java和CSharp泛型及C++模板/';
+    this.page.identifier = '2014/11/24/浅谈Java和CSharp泛型及C++模板/';
+    this.page.title = '浅谈Java和C#泛型及C++模板';
+  };</script><script type="text/javascript" id="disqus-lazy-load-script">$.ajax({
+url: 'https://disqus.com/next/config.json',
+timeout: 2500,
+type: 'GET',
+success: function(){
+  var d = document;
+  var s = d.createElement('script');
+  s.src = '//zichuan.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', + new Date());
+  (d.head || d.body).appendChild(s);
+  $('.disqus_click_btn').css('display', 'none');
+},
+error: function() {
+  $('.disqus_click_btn').css('display', 'block');
+}
+});</script><script type="text/javascript" id="disqus-click-load">$('.btn_click_load').click(() => {  //click to load comments
+    (() => { // DON'T EDIT BELOW THIS LINE
+        var d = document;
+        var s = d.createElement('script');
+        s.src = '//zichuan.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', + new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+    $('.disqus_click_btn').css('display','none');
+});</script><script type="text/javascript" id="disqus-count-script">$(function() {
+     var xhr = new XMLHttpRequest();
+     xhr.open('GET', '//disqus.com/next/config.json', true);
+     xhr.timeout = 2500;
+     xhr.onreadystatechange = function () {
+       if (xhr.readyState === 4 && xhr.status === 200) {
+         $('.post-meta .post-comments-count').show();
+         var s = document.createElement('script');
+         s.id = 'dsq-count-scr';
+         s.src = 'https://zichuan.disqus.com/count.js';
+         s.async = true;
+         (document.head || document.body).appendChild(s);
+       }
+     };
+     xhr.ontimeout = function () { xhr.abort(); };
+     xhr.send(null);
+   });
+</script></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://jackliu91.github.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/Mac/" style="font-size: 15px;">Mac</a> <a href="/tags/Programing-Language/" style="font-size: 15px;">Programing Language</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2015/05/16/OS X下卸载R语言/">OS X下卸载R语言</a></li><li class="post-list-item"><a class="post-list-link" href="/2014/11/24/浅谈Java和CSharp泛型及C++模板/">浅谈Java和C#泛型及C++模板</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-comment-o"> 最近评论</i></div><script type="text/javascript" src="//zichuan.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=1&amp;avatar_size=32&amp;excerpt_length=20&amp;hide_mods=1"></script></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2018 <a href="/." rel="nofollow">子川的博客.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>
